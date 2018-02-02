@@ -18,7 +18,7 @@ container: package
 	docker build -t ${REGISTRY}/build:$(TAG) .
 
 push: container
-	gcloud docker push ${REGISTRY}/build:$(TAG)
+	docker push ${REGISTRY}/build:$(TAG)
 
 clean:
 	rm -f imagebuilder
