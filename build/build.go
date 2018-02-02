@@ -69,7 +69,7 @@ func (bs *buildStatus)setBuildStatus(server string, secret string, projectType s
 func (bs *buildStatus) UploadFile(url string, timeout time.Duration) error {
 	bodyBuf := &bytes.Buffer{}
 	bodyWriter := multipart.NewWriter(bodyBuf)
-	fileWriter, err := bodyWriter.CreateFormFile("file", "")
+	fileWriter, err := bodyWriter.CreateFormFile("file", " ")
 	if err != nil {
 		fmt.Println("error writing to buffer")
 		return err
