@@ -114,7 +114,7 @@ func execScript(script string, bs *buildStatus, bc string) {
 			bs.Status = Fail
 			bs.Message = "init log file error"
 		} else {
-			err := executor.Command("/bin/sh", ScriptFile)
+			err := executor.Command("/bin/sh", "-x", ScriptFile)
 			//err = err.(syscall.Errno)
 			if err != nil {
 				bs.Status = Fail
