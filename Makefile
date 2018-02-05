@@ -3,7 +3,7 @@ all: package
 FLAGS =
 ENVVAR = GOOS=linux GOARCH=amd64 CGO_ENABLED=0
 REGISTRY = pub.domeos.org/domeos
-TAG = 0.5
+TAG = 1.12.6
 
 deps:
 	go get github.com/tools/godep
