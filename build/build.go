@@ -114,11 +114,11 @@ func execScript(script string, bs *buildStatus, bc string) {
 			bs.Status = Fail
 			bs.Message = "init log file error"
 		} else {
-			err := executor.Command("/bin/sh", "-x", ScriptFile)
+			err := executor.Command("/bin/sh","-x" ,ScriptFile)
 			//err = err.(syscall.Errno)
 			if err != nil {
 				bs.Status = Fail
-				bs.Message = "execute ci script fail"
+				bs.Message = "execute ci script fail:"+script
 			} else {
 				bs.Status = Success
 			}
@@ -205,13 +205,14 @@ func RunOnType(codeType string) {
 		secret := os.Getenv("SECRET")
 		dockerfileUrl := server + "/api/ci/build/builddockerfile/" + os.Getenv("PROJECT_ID") + "/" + os.Getenv("BUILD_ID")
 		compilefileUrl := server + "/api/ci/build/compilefile/" + os.Getenv("PROJECT_ID") + "/" + os.Getenv("BUILD_ID")
-		buildPath := os.Getenv("BUILD_PATH")
+                compilescriptUrl := server + "/api/ci/build/compilescript/" + os.Getenv("PROJECT_ID") + "/" + os.Getenv("BUILD_ID")		
+buildPath := os.Getenv("BUILD_PATH")
 		dockerfilePath := os.Getenv("DOCKERFILE_PATH")
 		buildType := os.Getenv("BUILD_TYPE")
 		useAuth, _ := strconv.Atoi(os.Getenv("USE_AUTH"))
 
 		buildContext := &buildcontext.BuildContext{idrsa, codeUrl, buildId, commitId, imageName, imageTag, registryUrl, hasDockerfile,
-			secret, dockerfileUrl, compilefileUrl, buildPath, dockerfilePath, codeType, buildType, useAuth}
+			secret, dockerfileUrl, compilefileUrl, buildPath, dockerfilePath, codeType, buildType, useAuth,compilescriptUrl}
 		script, err := buildContext.WriteScript()
 		bs := &buildStatus{}
 		bc, _ := json.Marshal(buildContext)

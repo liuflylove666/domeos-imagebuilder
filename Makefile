@@ -2,8 +2,8 @@ all: package
 
 FLAGS =
 ENVVAR = GOOS=linux GOARCH=amd64 CGO_ENABLED=0
-REGISTRY = pub.domeos.org/domeos
-TAG = 1.12.6
+REGISTRY = pub.f-road.com.cn/froados
+TAG = 1.1
 
 deps:
 	go get github.com/tools/godep

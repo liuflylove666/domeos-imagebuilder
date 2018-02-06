@@ -45,6 +45,7 @@ type BuildContext struct {
 	BuildType      string   `json:"buildType"`
 
 	UseAuth        int   `json:"useAuth"`
+        CompilescriptUrl string `json:"compilescriptUrl"`
 }
 
 func (context *BuildContext) WriteScript() (script string, error error) {
@@ -96,7 +97,10 @@ func (context *BuildContext) WriteScript() (script string, error error) {
 	}
 
 	if (strings.EqualFold(context.BuildType, "java")) {
-		if len(context.CompilefileUrl) > 0 {
+if len(context.CompilescriptUrl) > 0 {
+			f.WriteCmdSilent(fmt.Sprintf("curl --connect-timeout 60 -o /code/domeos_created_compile_file.sh %s?secret=%s", context.CompilescriptUrl, context.Secret))
+		}	
+	if len(context.CompilefileUrl) > 0 {
 			fmt.Println(context.CompilefileUrl + "?secret=" + context.Secret)
 			url := fmt.Sprintf("%s?secret=%s", context.CompilefileUrl, context.Secret)
 			timeout := time.Duration(10 * time.Second)
