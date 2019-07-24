@@ -69,7 +69,7 @@ func (bs *buildStatus)setBuildStatus(server string, secret string, projectType s
 func (bs *buildStatus) UploadFile(url string, timeout time.Duration) error {
 	bodyBuf := &bytes.Buffer{}
 	bodyWriter := multipart.NewWriter(bodyBuf)
-	fileWriter, err := bodyWriter.CreateFormFile("file", "")
+	fileWriter, err := bodyWriter.CreateFormFile("file", " ")
 	if err != nil {
 		fmt.Println("error writing to buffer")
 		return err
@@ -114,11 +114,11 @@ func execScript(script string, bs *buildStatus, bc string) {
 			bs.Status = Fail
 			bs.Message = "init log file error"
 		} else {
-			err := executor.Command("/bin/sh", ScriptFile)
+			err := executor.Command("/bin/sh","-x" ,ScriptFile)
 			//err = err.(syscall.Errno)
 			if err != nil {
 				bs.Status = Fail
-				bs.Message = "execute ci script fail"
+				bs.Message = "execute ci script fail:"+script
 			} else {
 				bs.Status = Success
 			}
@@ -205,7 +205,8 @@ func RunOnType(codeType string) {
 		secret := os.Getenv("SECRET")
 		dockerfileUrl := server + "/api/ci/build/builddockerfile/" + os.Getenv("PROJECT_ID") + "/" + os.Getenv("BUILD_ID")
 		compilefileUrl := server + "/api/ci/build/compilefile/" + os.Getenv("PROJECT_ID") + "/" + os.Getenv("BUILD_ID")
-		buildPath := os.Getenv("BUILD_PATH")
+                compilescriptUrl := server + "/api/ci/build/compilescript/" + os.Getenv("PROJECT_ID") + "/" + os.Getenv("BUILD_ID")		
+buildPath := os.Getenv("BUILD_PATH")
 		dockerfilePath := os.Getenv("DOCKERFILE_PATH")
 		buildType := os.Getenv("BUILD_TYPE")
 		useAuth, _ := strconv.Atoi(os.Getenv("USE_AUTH"))
@@ -213,7 +214,7 @@ func RunOnType(codeType string) {
 		AuthPass, _ := os.Getenv("AUTHPASS")
 
 		buildContext := &buildcontext.BuildContext{idrsa, codeUrl, buildId, commitId, imageName, imageTag, registryUrl, hasDockerfile,
-			secret, dockerfileUrl, compilefileUrl, buildPath, dockerfilePath, codeType, buildType, useAuth, AuthUser, AuthPass}
+			secret, dockerfileUrl, compilefileUrl, buildPath, dockerfilePath, codeType, buildType, useAuth, compilescriptUrl, AuthUser, AuthPass}
 		script, err := buildContext.WriteScript()
 		bs := &buildStatus{}
 		bc, _ := json.Marshal(buildContext)

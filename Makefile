@@ -2,8 +2,8 @@ all: package
 
 FLAGS =
 ENVVAR = GOOS=linux GOARCH=amd64 CGO_ENABLED=0
-REGISTRY = pub.domeos.org/domeos
-TAG = 0.5
+REGISTRY = pub.f-road.com.cn/froados
+TAG = 1.1
 
 deps:
 	go get github.com/tools/godep
@@ -18,7 +18,7 @@ container: package
 	docker build -t ${REGISTRY}/build:$(TAG) .
 
 push: container
-	gcloud docker push ${REGISTRY}/build:$(TAG)
+	docker push ${REGISTRY}/build:$(TAG)
 
 clean:
 	rm -f imagebuilder

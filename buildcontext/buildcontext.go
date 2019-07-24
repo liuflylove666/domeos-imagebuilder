@@ -46,6 +46,8 @@ type BuildContext struct {
 
 	UseAuth        int   `json:"useAuth"`
 
+        CompilescriptUrl string `json:"compilescriptUrl"`
+
 	AuthUser       string   `json:"authuser"`
 	AuthPass       string   `json:"authpass"`
 }
@@ -74,7 +76,8 @@ func (context *BuildContext) WriteScript() (script string, error error) {
 	}
 
 	if context.UseAuth == 1 {
-		IdAndSecret := fmt.Sprintf("%s:%s", context.AuthUser, context.AuthPass);
+		// IdAndSecret := fmt.Sprintf("%d:%s", context.BuildId, context.Secret);
+                IdAndSecret := fmt.Sprintf("%s:%s", context.AuthUser, context.AuthPass);
 		base64Text := make([]byte, base64.StdEncoding.EncodedLen(len(IdAndSecret)))
 		base64.StdEncoding.Encode(base64Text, []byte(IdAndSecret))
 		f.WriteCmdSilent(fmt.Sprintf(`echo "
@@ -99,9 +102,10 @@ func (context *BuildContext) WriteScript() (script string, error error) {
 	}
 
 	if (strings.EqualFold(context.BuildType, "java")) {
-		fmt.Println("aaaaaaaa:", context.CompilefileUrl)
-		if len(context.CompilefileUrl) > 0 {
-                        fmt.Println("aaaaaaaa111\n")
+if len(context.CompilescriptUrl) > 0 {
+			f.WriteCmdSilent(fmt.Sprintf("curl --connect-timeout 60 -o /code/domeos_created_compile_file.sh %s?secret=%s", context.CompilescriptUrl, context.Secret))
+		}	
+	if len(context.CompilefileUrl) > 0 {
 			fmt.Println(context.CompilefileUrl + "?secret=" + context.Secret)
 			url := fmt.Sprintf("%s?secret=%s", context.CompilefileUrl, context.Secret)
 			timeout := time.Duration(10 * time.Second)
